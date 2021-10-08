@@ -2,6 +2,7 @@ import { UpdatePostDto } from './dto/updatePost.dto';
 import { CreatePostDto } from './dto/createPost.dto';
 import { PostsService } from './posts.service';
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import PostEntity from './post.entity';
 
 @Controller('posts')
 export class PostsController {
@@ -19,10 +20,10 @@ export class PostsController {
     //     return this.postsService.getPostById(Number(id));
     // }
 
-    // @Post()
-    // async createPost(@Body() post: CreatePostDto) {
-    //     return this.postsService.createPost(post);
-    // }
+    @Post()
+    async createPost(@Body() post: CreatePostDto): Promise<PostEntity> {
+        return this.postsService.createPost(post);
+    }
 
     // @Put(":id")
     // async replacePost(@Param("id") id: string, @Body() post: UpdatePostDto){

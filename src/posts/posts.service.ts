@@ -31,14 +31,11 @@ export class PostsService {
     //     throw new HttpException("Post not found", HttpStatus.NOT_FOUND);
     // }
 
-    // createPost(post: CreatePostDto): Post {
-    //     const newPost = {
-    //         id: ++this.lastPostId,
-    //         ...post
-    //     }
-    //     this.posts.push(newPost);
-    //     return newPost;
-    // }
+    async createPost(createPostDto: CreatePostDto): Promise<Post> {
+        const newPost = await this.postsRepository.create(createPostDto);
+        await this.postsRepository.save(newPost);
+        return newPost;
+    }
 
     // replacePost(id: number, post: UpdatePostDto): Post {
     //     const postIndex = this.posts.findIndex(post => post.id === id);
