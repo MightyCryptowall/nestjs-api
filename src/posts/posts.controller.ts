@@ -30,8 +30,8 @@ export class PostsController {
         return this.postsService.updatePost(id, post);
     }
 
-    // @Delete(":id")
-    // async deletePost(@Param("id") id: string) {
-    //     return this.postsService.deletePost(Number(id));
-    // }
+    @Delete(":id")
+    async deletePost(@Param("id") id: string): Promise<void> {
+        return this.postsService.deletePost(id);
+    }
 }

@@ -44,14 +44,12 @@ export class PostsService {
         throw new HttpException("Post not found", HttpStatus.NOT_FOUND);
     }
 
-    // deletePost(id: number): void {
-    //     const postIndex = this.posts.findIndex(post => post.id === id);
-    //     if (postIndex > -1){
-    //         this.posts.splice(postIndex, 1);
-    //     }else{
-    //         throw new HttpException("Post not found", HttpStatus.NOT_FOUND);
-    //     }
+    async deletePost(id: string): Promise<void> {
+        const deleteResponse = await this.postsRepository.delete(id);
+        if (!deleteResponse.affected){
+            throw new HttpException("Post not found", HttpStatus.NOT_FOUND);
+        }
 
        
-    // }
+    }
 }
