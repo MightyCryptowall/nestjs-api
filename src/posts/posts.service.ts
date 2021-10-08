@@ -37,14 +37,12 @@ export class PostsService {
         return newPost;
     }
 
-    // replacePost(id: number, post: UpdatePostDto): Post {
-    //     const postIndex = this.posts.findIndex(post => post.id === id);
-    //     if (postIndex > -1) {
-    //         this.posts[postIndex] = post;
-    //         return post;
-    //     }
-    //     throw new HttpException("Post not found", HttpStatus.NOT_FOUND);
-    // }
+    async updatePost(id: string, updatePostDto: UpdatePostDto): Promise<Post> {
+        await this.postsRepository.update(id,updatePostDto);
+        const updatedPost = await this.postsRepository.findOne(id);
+        if(updatedPost) return updatedPost;
+        throw new HttpException("Post not found", HttpStatus.NOT_FOUND);
+    }
 
     // deletePost(id: number): void {
     //     const postIndex = this.posts.findIndex(post => post.id === id);

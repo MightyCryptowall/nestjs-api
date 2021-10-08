@@ -25,10 +25,10 @@ export class PostsController {
         return this.postsService.createPost(post);
     }
 
-    // @Put(":id")
-    // async replacePost(@Param("id") id: string, @Body() post: UpdatePostDto){
-    //     return this.postsService.replacePost(Number(id), post);
-    // }
+    @Put(":id")
+    async updatePost(@Param("id") id: string, @Body() post: UpdatePostDto): Promise<PostEntity>{
+        return this.postsService.updatePost(id, post);
+    }
 
     // @Delete(":id")
     // async deletePost(@Param("id") id: string) {
