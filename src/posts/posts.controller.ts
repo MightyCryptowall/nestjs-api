@@ -1,8 +1,9 @@
 import { UpdatePostDto } from './dto/updatePost.dto';
 import { CreatePostDto } from './dto/createPost.dto';
 import { PostsService } from './posts.service';
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import PostEntity from './post.entity';
+import JwtAuthenticationGuard from 'src/authentication/jwt-authentication.guard';
 
 @Controller('posts')
 export class PostsController {
@@ -21,6 +22,7 @@ export class PostsController {
     // }
 
     @Post()
+    @UseGuards(JwtAuthenticationGuard)
     async createPost(@Body() post: CreatePostDto): Promise<PostEntity> {
         return this.postsService.createPost(post);
     }
