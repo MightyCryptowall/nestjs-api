@@ -9,6 +9,8 @@ import { UsersService } from './users/users.service';
 import { UsersModule } from './users/users.module';
 import { AuthenticationService } from './authentication/authentication.service';
 import { AuthenticationModule } from './authentication/authentication.module';
+import { APP_FILTER } from '@nestjs/core';
+import { ExceptionsLoggerFilter } from './utils/exceptionsLogger.filter';
 
 
 @Module({
@@ -25,6 +27,8 @@ import { AuthenticationModule } from './authentication/authentication.module';
     })
   }), DatabaseModule, UsersModule, AuthenticationModule],
   controllers: [],
-  providers: [],
+  providers: [
+    // {provide: APP_FILTER, useClass: ExceptionsLoggerFilter} // ExceptionsLogger Filter is injected globally into AppModule
+  ],
 })
 export class AppModule {}

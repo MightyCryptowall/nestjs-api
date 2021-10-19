@@ -1,9 +1,10 @@
 import { UpdatePostDto } from './dto/updatePost.dto';
 import { CreatePostDto } from './dto/createPost.dto';
 import { PostsService } from './posts.service';
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseFilters, UseGuards } from '@nestjs/common';
 import PostEntity from './post.entity';
 import JwtAuthenticationGuard from 'src/authentication/jwt-authentication.guard';
+import { ExceptionsLoggerFilter } from 'src/utils/exceptionsLogger.filter';
 
 @Controller('posts')
 export class PostsController {
@@ -16,10 +17,11 @@ export class PostsController {
         return this.postsService.getAllPost();
     }
 
-    // @Get(":id")
-    // getPostById(@Param("id") id: string) {
-    //     return this.postsService.getPostById(Number(id));
-    // }
+    @Get(":id")
+    @UseFilters(ExceptionsLoggerFilter) // bind ExceptionsLoggerFilter directly to each handler
+    async getPostById(@Param("id") id: string): Promise<PostEntity> {
+        return this.postsService.getPostById(Number(id));
+    }
 
     @Post()
     @UseGuards(JwtAuthenticationGuard)

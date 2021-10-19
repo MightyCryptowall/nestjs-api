@@ -1,5 +1,5 @@
 import { ConfigService } from '@nestjs/config';
-import { RegisterDto } from './dto/RegisterDto';
+import { RegisterDto } from './dto/register.dto';
 import { UsersService } from './../users/users.service';
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 
