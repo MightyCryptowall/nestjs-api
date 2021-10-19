@@ -22,14 +22,14 @@ export class PostsService {
         return this.postsRepository.find();
     };
 
-    // getPostById(id: number): Post {
-    //     const post = this.posts.find(post => post.id === id);
-    //     if(post) {
-    //         return post
-    //     }
+    async getPostById(id: number): Promise<Post> {
+        const post = await this.postsRepository.findOne(id);
+        if(post) {
+            return post
+        }
 
-    //     throw new HttpException("Post not found", HttpStatus.NOT_FOUND);
-    // }
+        throw new HttpException("Post not found", HttpStatus.NOT_FOUND);
+    }
 
     async createPost(createPostDto: CreatePostDto): Promise<Post> {
         const newPost = await this.postsRepository.create(createPostDto);
