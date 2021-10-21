@@ -1,12 +1,16 @@
 import RequestWithUser from './requestWithUser.interface';
 import { AuthenticationService } from './authentication.service';
-import { Body, Controller, Get, HttpCode, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Get, HttpCode, Post, Req, Res, SerializeOptions, UseGuards, UseInterceptors } from '@nestjs/common';
 import { RegisterDto } from './dto/register.dto';
 import { LocalAuthenticationGuard } from './localAuthentication.guard';
 import JwtAuthenticationGuard from './jwt-authentication.guard';
 import { Response } from 'express';
 
+// @UseInterceptors(ClassSerializerInterceptor)
 @Controller('authentication')
+@SerializeOptions({
+  strategy: 'excludeAll'
+})
 export class AuthenticationController {
     constructor(
         private readonly authenticationService: AuthenticationService
@@ -20,12 +24,13 @@ export class AuthenticationController {
     @HttpCode(200)
     @UseGuards(LocalAuthenticationGuard)
     @Post("login-in")
-    async logIn(@Req() request: RequestWithUser, @Res() response: Response) { 
+
+    async logIn(@Req() request: RequestWithUser, @Res({ passthrough: true }) response: Response) { 
         const user = request.user;
         const cookie = this.authenticationService.getCookieWithJwtToken(+user.id);
         response.setHeader('Set-Cookie', cookie);
         user.password = undefined;
-        return response.send(user);
+        return user
     }
 
     @UseGuards(JwtAuthenticationGuard)
