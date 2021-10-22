@@ -44,7 +44,6 @@ export class AuthenticationService {
     try {
       const user = await this.usersService.getByEmail(email);
       await this.verifyPassword(password, user.password);
-      user.password = undefined;
       return user;
     } catch (error) {
       throw new HttpException(
@@ -64,7 +63,7 @@ export class AuthenticationService {
     }
   }
 
-  public getCookieWithJwtToken(userId: number){
+  public getCookieWithJwtToken(userId: string){
     const payload: TokenPayload = {userId};
     const token = this.jwtService.sign(payload);
     return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get('JWT_EXPIRATION_TIME')}`;

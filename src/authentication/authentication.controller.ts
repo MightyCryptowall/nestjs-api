@@ -6,11 +6,9 @@ import { LocalAuthenticationGuard } from './localAuthentication.guard';
 import JwtAuthenticationGuard from './jwt-authentication.guard';
 import { Response } from 'express';
 
-// @UseInterceptors(ClassSerializerInterceptor)
 @Controller('authentication')
-@SerializeOptions({
-  strategy: 'excludeAll'
-})
+@UseInterceptors(ClassSerializerInterceptor)
+
 export class AuthenticationController {
     constructor(
         private readonly authenticationService: AuthenticationService
@@ -24,20 +22,18 @@ export class AuthenticationController {
     @HttpCode(200)
     @UseGuards(LocalAuthenticationGuard)
     @Post("login-in")
-
     async logIn(@Req() request: RequestWithUser, @Res({ passthrough: true }) response: Response) { 
         const user = request.user;
-        const cookie = this.authenticationService.getCookieWithJwtToken(+user.id);
+        const cookie = this.authenticationService.getCookieWithJwtToken(user.id);
         response.setHeader('Set-Cookie', cookie);
-        user.password = undefined;
-        return user
+        // user.password = undefined;
+        return user;
     }
 
     @UseGuards(JwtAuthenticationGuard)
     @Post('log-out')
-    async logOut(@Req() request: RequestWithUser, @Res() response: Response) {
+    async logOut(@Req() request: RequestWithUser, @Res({ passthrough: true }) response: Response) {
       response.setHeader('Set-Cookie', this.authenticationService.getCookieForLogOut());
-      return response.sendStatus(200);
     }
 
     @UseGuards(JwtAuthenticationGuard)
