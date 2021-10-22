@@ -11,6 +11,8 @@ import { AuthenticationService } from './authentication/authentication.service';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { APP_FILTER } from '@nestjs/core';
 import { ExceptionsLoggerFilter } from './utils/exceptionsLogger.filter';
+import { CategoriesController } from './categories/categories.controller';
+import { CategoriesModule } from './categories/categories.module';
 
 
 @Module({
@@ -25,7 +27,7 @@ import { ExceptionsLoggerFilter } from './utils/exceptionsLogger.filter';
       JWT_SECRET: Joi.string().required(),
       JWT_EXPIRATION_TIME: Joi.string().required(),
     })
-  }), DatabaseModule, UsersModule, AuthenticationModule],
+  }), DatabaseModule, UsersModule, AuthenticationModule, CategoriesModule],
   controllers: [],
   providers: [
     // {provide: APP_FILTER, useClass: ExceptionsLoggerFilter} // ExceptionsLogger Filter is injected globally into AppModule

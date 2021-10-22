@@ -4,11 +4,12 @@ import * as cookieParser from "cookie-parser";
 import { ExceptionsLoggerFilter } from './utils/exceptionsLogger.filter';
 import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import { ExcludeNullInterceptor } from './utils/excludeNull.interceptor';
+// import { ValidationPipe } from './utils/validation.pipe';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.useGlobalPipes(new ValidationPipe());
+ 
 
   // adding ClassSerializerInterceptor globally
   app.useGlobalInterceptors(new ClassSerializerInterceptor(
@@ -16,7 +17,7 @@ async function bootstrap() {
   );
   
   app.useGlobalInterceptors(new ExcludeNullInterceptor());
-
+  app.useGlobalPipes(new ValidationPipe());
   // app.useGlobalInterceptors(new ExcludeNullInterceptor());
 
   // ExceptionsLoggerFilter which is the modify version of BaseExceptionFilter

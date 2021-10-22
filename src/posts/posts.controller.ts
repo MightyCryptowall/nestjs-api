@@ -1,12 +1,14 @@
 import { UpdatePostDto } from './dto/updatePost.dto';
 import { CreatePostDto } from './dto/createPost.dto';
 import { PostsService } from './posts.service';
-import { Body, Controller, Delete, Get, Param, Post, Put, UseFilters, UseGuards } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Delete, Get, Param, Post, Put, Req, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
 import PostEntity from './post.entity';
 import JwtAuthenticationGuard from 'src/authentication/jwt-authentication.guard';
 import { ExceptionsLoggerFilter } from 'src/utils/exceptionsLogger.filter';
+import RequestWithUser from 'src/authentication/requestWithUser.interface';
 
 @Controller('posts')
+@UseInterceptors(ClassSerializerInterceptor)
 export class PostsController {
     constructor(
         private readonly postsService: PostsService
@@ -25,8 +27,8 @@ export class PostsController {
 
     @Post()
     @UseGuards(JwtAuthenticationGuard)
-    async createPost(@Body() post: CreatePostDto): Promise<PostEntity> {
-        return this.postsService.createPost(post);
+    async createPost(@Body() post: CreatePostDto, @Req() req: RequestWithUser): Promise<PostEntity> {
+        return this.postsService.createPost(post, req.user);
     }
 
     @Put(":id")

@@ -1,10 +1,11 @@
 import { Exclude, Expose } from "class-transformer";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import Post from "src/posts/post.entity";
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import Address from "./address.entity";
 
 @Entity()
 class User {
     @PrimaryGeneratedColumn('uuid')
-    @Exclude()
     public id: string;
 
     @Column({unique:true})
@@ -16,8 +17,16 @@ class User {
     public name: string;
 
     @Column()
-    @Exclude()
+    @Exclude({toPlainOnly: true})
     public password: string;
+
+    // @OneToOne(() => Address, {eager: true}) // load Address by default
+    @OneToOne(() => Address, {eager: true, cascade: true}) // enabling cascade property allow current entity to create the object for another properly in relationship 
+    @JoinColumn()
+    public address: Address;
+
+    @OneToMany(() => Post, (post: Post) => post.author)
+    public posts: Post[];
 }
 
 export default User;
