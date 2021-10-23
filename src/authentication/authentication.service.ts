@@ -10,11 +10,13 @@ import TokenPayload from './tokenPayload.interface';
 
 @Injectable()
 export class AuthenticationService {
+  
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService
   ) {}
+
 
   public async register(registerDto: RegisterDto) {
     const hashedPassword = await bcrypt.hash(registerDto.password, 10);
