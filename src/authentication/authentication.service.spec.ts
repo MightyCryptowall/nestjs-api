@@ -9,39 +9,32 @@ import { UsersService } from '../users/users.service';
 import { Repository } from 'typeorm';
 import { AuthenticationService } from './authentication.service';
 import * as Joi from '@hapi/joi';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import mockedConfigService from '../utils/mocks/config.service';
+import mockedJwtService from '../utils/mocks/jwt.service';
 
 describe('AuthenticationService', () => {
   let authenticationService: AuthenticationService;
 
   beforeEach(async () => {
     const module = await Test.createTestingModule({
-      imports: [
-        UsersModule,
-        ConfigModule.forRoot({
-          validationSchema: Joi.object({
-            POSTGRES_HOST: Joi.string().required(),
-            POSTGRES_PORT: Joi.number().required(),
-            POSTGRES_USER: Joi.string().required(),
-            POSTGRES_PASSWORD: Joi.string().required(),
-            POSTGRES_DB: Joi.string().required(),
-            JWT_SECRET: Joi.string().required(),
-            JWT_EXPIRATION_TIME: Joi.string().required(),
-            PORT: Joi.number(),
-          })
-        }),
-        DatabaseModule,
-        JwtModule.registerAsync({
-          imports: [ConfigModule],
-          inject: [ConfigService],
-          useFactory: async (configService: ConfigService) => ({
-            secret: configService.get('JWT_SECRET'),
-            signOptions: {
-              expiresIn: `${configService.get('JWT_EXPIRATION_TIME')}`,
-            },
-          }),
-        }),
+      
+      providers: [
+        UsersService,
+        AuthenticationService,
+        {
+          provide: ConfigService,
+          useValue: mockedConfigService
+        },
+        {
+          provide: JwtService,
+          useValue: mockedJwtService
+        },
+        {
+          provide: getRepositoryToken(User),
+          useValue: {},
+        },
       ],
-      providers: [AuthenticationService],
     }).compile();
 
     authenticationService = await module.get<AuthenticationService>(AuthenticationService);
