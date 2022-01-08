@@ -3,12 +3,14 @@ import { Repository } from 'typeorm';
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import User from './user.entity';
+import { FilesService } from 'src/files/files.service';
 
 @Injectable()
 export class UsersService {
     constructor(
         @InjectRepository(User)
-        private usersRepository: Repository<User>
+        private usersRepository: Repository<User>,
+        private readonly filesService: FilesService
     ){}
 
     async getByEmail(email:string) {
@@ -29,5 +31,18 @@ export class UsersService {
           return user;
         }
         throw new HttpException('User with this id does not exist', HttpStatus.NOT_FOUND);
+    }
+
+    async addAvator(userId: string, imageBuffer: Buffer, filename: string) {
+        const avatar = await this.filesService.uploadPublicFile(imageBuffer, filename);
+        const user = await this.getById(userId);
+
+        await this.usersRepository.update(userId, {
+            ...user,
+            avatar
+        });
+
+        return avatar;
+
     }
 }
