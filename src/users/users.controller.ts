@@ -30,7 +30,6 @@ export class UsersController {
     @UploadedFile() file: Express.Multer.File,
   ) {
 
-    
     return this.usersService.addAvator(
       request.user.id,
       file.buffer,
