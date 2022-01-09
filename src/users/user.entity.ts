@@ -3,6 +3,7 @@ import Post from "../posts/post.entity";
 import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import Address from "./address.entity";
 import PublicFile from "src/files/publicFile.entity";
+import PrivateFile from "src/privateFiles/privateFile.entity";
 
 @Entity()
 class User {
@@ -38,6 +39,12 @@ class User {
         }
     )
     public avatar?: PublicFile;
+
+    @OneToMany(
+        () => PrivateFile,
+        (file: PrivateFile) => file.owner
+    )
+    public files: PrivateFile[];
 }
 
 export default User;

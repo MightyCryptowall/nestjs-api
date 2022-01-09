@@ -22,7 +22,7 @@ export class UsersController {
     return {message:"hello"};
   }
   
-  @Post('/avatar')
+  @Post("/avatar")
   @UseGuards(JwtAuthenticationGuard)
   @UseInterceptors(FileInterceptor('file'))
   async addAvatar(
@@ -36,4 +36,12 @@ export class UsersController {
       file.originalname,
     );
   }
+
+  @Post("files")
+  @UseGuards(JwtAuthenticationGuard)
+  @UseInterceptors(FileInterceptor('file'))
+  async addPrivateFile(@Req() request: RequestWithUser, @UploadedFile() file: Express.Multer.File) {
+    return this.usersService.addPrivateFile(request.user.id, file.buffer, file.originalname);
+  }
+
 }
